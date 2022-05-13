@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Header from './Header';
 import axios from 'axios';
 import Card from './Card';
+import Loader from './Loader';
 
 // type Pokemons = {
 //   name: string;
@@ -63,7 +64,7 @@ const Pokedex = () => {
     <>
       <Header />
       {loading ? (
-        <h2>Loading...</h2>
+        <Loader />
       ) : (
         <div className='container'>
           {pokemonData.map((pokemon) => (

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { PokedexProp } from './Pokedex';
+import Loader from './Loader';
 
 const Pokemon = () => {
   const history = useNavigate();
@@ -23,7 +24,7 @@ const Pokemon = () => {
 
   const renderPokemon = () => {
     if (pokemon === undefined) {
-      return <h2>Loading...</h2>;
+      return <Loader />;
     } else if (pokemon) {
       return (
         <>
