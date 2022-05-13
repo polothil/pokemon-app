@@ -1,38 +1,109 @@
-.App {
-  text-align: center;
+* {
+  box-sizing: border-box;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body {
+  margin: 0;
+  height: 100%;
+  background-color: #87ceeb;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.header {
+  height: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+  /* border: 2px solid blue; */
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.header input {
+  height: 2rem;
+  border-radius: 5px;
+  padding: 0 2rem;
+}
+
+.header label {
+  font-size: x-large;
+  padding: 0 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 0.5fr));
+  gap: 2rem;
+  justify-content: space-evenly;
+}
+
+.card {
+  width: 300px;
+  background-color: #b5e7fd;
+  border-radius: 1rem;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.5);
+  padding: 0 1.5rem;
+  margin: 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.abilities {
+  width: 30%;
+  margin: auto;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.abilities .group {
   color: white;
+  background-color: #224708;
+  padding: 0.5rem;
+  font-size: 12px;
+  border-radius: 8px;
 }
 
-.App-link {
-  color: #61dafb;
+.btn-group {
+  width: 90%;
+  margin: auto;
+  padding-top: 10px;
+  display: flex;
+  justify-content: center;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.btn-group button {
+  outline: none;
+  border: none;
+  width: 150px;
+  padding: 0.3rem 0;
+  margin: 1rem;
+  font-size: 17px;
+  color: white;
+  background-color: #b74555;
+  border-radius: 8px;
+}
+
+.content {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  color: #000;
+  top: 100px;
+  right: 10px;
+}
+
+.content img {
+  margin: 2rem;
+  height: 180px;
+}
+
+.content h1 {
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 1px;
 }
