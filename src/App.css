@@ -19,6 +19,17 @@ body {
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  background-color: #337576;
+  padding-bottom: 20px;
+}
+
+.header h1 {
+  margin: 8px 0;
+  color: white;
 }
 
 .filter input {
