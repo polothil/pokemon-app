@@ -8,7 +8,7 @@ body {
   font-family: 'Roboto', sans-serif;
   margin: 0;
   height: 100%;
-  background-color: #80ddbe;
+  background-color: white;
   display: flex;
   flex-direction: column;
   padding-bottom: 100px;
@@ -23,7 +23,7 @@ body {
   top: 0;
   left: 0;
   z-index: 1;
-  background-color: #337576;
+  background-color: #50add4;
   padding-bottom: 20px;
 }
 
@@ -60,14 +60,14 @@ body {
 .container {
   margin-top: 2rem;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 0.5fr));
+  grid-template-columns: repeat(auto-fit, minmax(275px, 0.5fr));
   gap: 2rem;
   justify-content: space-evenly;
 }
 
 .card {
-  width: 300px;
-  background-color: #b5e7fd;
+  width: 250px;
+  background-color: rgb(213, 213, 213);
   border-radius: 1rem;
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.5);
   padding: 0 1.5rem;
@@ -96,8 +96,10 @@ body {
 }
 
 .card img {
+  margin-top: 50px;
   cursor: pointer;
   background-color: #7fbbd5;
+  border-radius: 10px;
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.5);
 }
 
