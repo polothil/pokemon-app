@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Header from './Header';
 import axios from 'axios';
 import Card from './Card';
@@ -25,40 +25,61 @@ export type PokedexProp = {
 const Pokedex: React.FC = () => {
   const [pokemonData, setPokemonData] = useState<PokedexProp[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [url, setUrl] = useState<string>('https://pokeapi.co/api/v2/pokemon/');
-  const [next, setNext] = useState<string>('');
-  // const [previous, setPrevious] = useState('');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [filteredList, setFilteredList] = useState<PokedexProp[]>([]);
+  const [offset, setOffset] = useState(0);
+  const [y, setY] = useState(window.scrollY);
+
+  const handleNavigation = useCallback(
+    (e: any) => {
+      const window = e.currentTarget;
+      if (y < window.scrollY) {
+        // console.log('scrolling down');
+        if (
+          e.target.documentElement.scrollTop + window.innerHeight >=
+          e.target.documentElement.scrollHeight
+        ) {
+          console.log('At the bottom');
+          setOffset((prev) => prev + 30);
+        }
+      }
+      setY(window.scrollY);
+    },
+    [y]
+  );
+
+  useEffect(() => {
+    setY(window.scrollY);
+    window.addEventListener('scroll', handleNavigation);
+
+    return () => {
+      window.removeEventListener('scroll', handleNavigation);
+    };
+  }, [handleNavigation]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoading(true);
-        const res = await axios.get(url);
-        setNext(res.data.next);
-        // setPrevious(res.data.previous);
-        getPokemons(res.data.results);
+        console.log('API calling....');
+        const res = await axios.get(
+          `https://pokeapi.co/api/v2/pokemon?limit=30&offset=${offset}`
+        );
+        res.data.results.forEach(async (result: Pokemons) => {
+          const detailedRes = await axios.get(result.url);
+          setPokemonData((state) => {
+            state = [...state, detailedRes.data];
+            state.sort((a, b) => (a.id > b.id ? 1 : -1));
+            setLoading(false);
+            return state;
+          });
+        });
       } catch (error) {
         console.log(error);
         alert('Error fetching data from server');
       }
     };
-
     fetchData();
-  }, [url]);
-
-  const getPokemons = async (res: any) => {
-    res.map(async (item: Pokemons) => {
-      const result = await axios.get(item.url);
-      setPokemonData((state) => {
-        state = [...state, result.data];
-        state.sort((a, b) => (a.id > b.id ? 1 : -1));
-        return state;
-      });
-    });
-    setLoading(false);
-  };
+  }, [offset]);
 
   const handleFilter = (filter: string) => {
     setSearchTerm(filter);
@@ -80,32 +101,11 @@ const Pokedex: React.FC = () => {
       ) : (
         <div className='container'>
           {searchTerm.length < 1
-            ? pokemonData.map((pokemon) => <Card key={pokemon.id} pokemon={pokemon} />)
-            : filteredList.map((pokemon) => <Card key={pokemon.id} pokemon={pokemon} />)}
+            ? pokemonData.map((pokemon, i) => <Card key={i} pokemon={pokemon} />)
+            : filteredList.map((pokemon, i) => <Card key={i} pokemon={pokemon} />)}
         </div>
       )}
-      <div className='btn-group'>
-        {/* {previous && (
-          <button
-            onClick={() => {
-              setPokemonData([]);
-              setUrl(previous);
-            }}
-          >
-            Previous
-          </button>
-        )} */}
-        {next && searchTerm.length < 1 && (
-          <button
-            onClick={() => {
-              // setPokemonData([]);
-              setUrl(next);
-            }}
-          >
-            Load more
-          </button>
-        )}
-      </div>
+      <div className='btn-group'></div>
     </>
   );
 };
