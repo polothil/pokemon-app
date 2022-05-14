@@ -12,6 +12,7 @@ type Pokemons = {
 type pokeDexProp = {
   name: string;
   id: number;
+  fav: boolean;
   sprites: {
     front_default: string;
   };
@@ -24,6 +25,8 @@ const Pokedex: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [filteredList, setFilteredList] = useState<pokeDexProp[]>([]);
+  const [favorites, setfavorites] = useState<pokeDexProp[]>([]);
+  const [showFav, setShowFav] = useState<boolean>(false);
   const [offset, setOffset] = useState<number>(pokemonData.length);
   const [y, setY] = useState<number>(window.scrollY);
 
@@ -34,7 +37,8 @@ const Pokedex: React.FC = () => {
         // console.log('scrolling down');
         if (
           e.target.documentElement.scrollTop + window.innerHeight >=
-          e.target.documentElement.scrollHeight
+            e.target.documentElement.scrollHeight &&
+          !showFav
         ) {
           console.log('At the bottom');
           setOffset((prev) => prev + 30);
@@ -42,7 +46,7 @@ const Pokedex: React.FC = () => {
       }
       setY(window.scrollY);
     },
-    [y]
+    [y, showFav]
   );
 
   useEffect(() => {
@@ -68,6 +72,7 @@ const Pokedex: React.FC = () => {
             const pokeData = {
               name: detailedRes.data.name,
               id: detailedRes.data.id,
+              fav: false,
               sprites: {
                 front_default: detailedRes.data.sprites.front_default,
               },
@@ -102,16 +107,42 @@ const Pokedex: React.FC = () => {
     }
   };
 
+  const toggleFav = (id: number) => {
+    const result = pokemonData.filter((pokemon) => pokemon.id === id);
+    result[0].fav = !result[0].fav;
+    const favList = pokemonData.filter((pokemon) => pokemon.fav === true);
+    setfavorites(favList);
+  };
+
+  const handleShowfav = () => {
+    setShowFav((state) => !state);
+  };
+
   return (
     <>
-      <Header filter={handleFilter} />
+      <Header filter={handleFilter} fav={handleShowfav} showFav={showFav} />
       {loading ? (
         <Loader />
       ) : (
         <div className='container'>
-          {searchTerm.length < 1
-            ? pokemonData.map((pokemon, i) => <Card key={i} pokemon={pokemon} />)
-            : filteredList.map((pokemon, i) => <Card key={i} pokemon={pokemon} />)}
+          {showFav
+            ? favorites.map((pokemon) => (
+                <Card pokemon={pokemon} favIcon={toggleFav} key={pokemon.id} />
+              ))
+            : searchTerm.length < 1
+            ? pokemonData.map((pokemon) => (
+                <Card key={pokemon.id} pokemon={pokemon} favIcon={toggleFav} />
+              ))
+            : filteredList.map((pokemon, i) => (
+                <Card key={pokemon.id} pokemon={pokemon} favIcon={toggleFav} />
+              ))}
+          {/* {searchTerm.length < 1
+            ? pokemonData.map((pokemon) => (
+                <Card key={pokemon.id} pokemon={pokemon} favIcon={toggleFav} />
+              ))
+            : filteredList.map((pokemon, i) => (
+                <Card key={pokemon.id} pokemon={pokemon} favIcon={toggleFav} />
+              ))} */}
         </div>
       )}
       <div className='btn-group'></div>

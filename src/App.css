@@ -44,6 +44,19 @@ body {
   padding-bottom: 0.5rem;
 }
 
+.filter button {
+  margin-left: 50px;
+  font-size: 25px;
+  border-radius: 5px;
+  padding: 0 2rem;
+  outline: none;
+  border: none;
+  color: white;
+  background-color: #b74555;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
 .container {
   margin-top: 2rem;
   display: grid;
@@ -64,7 +77,6 @@ body {
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  cursor: pointer;
   position: relative;
 }
 
@@ -81,6 +93,23 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.card img {
+  cursor: pointer;
+  background-color: #7fbbd5;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.5);
+}
+
+.card .fav-btn {
+  margin-right: 10px;
+  font-size: 40px;
+  color: bisque;
+  cursor: pointer;
+}
+
+.card .fav {
+  color: red;
 }
 
 .btn-group {
@@ -208,5 +237,18 @@ body {
 
   100% {
     transform: rotate(450deg);
+  }
+}
+
+@media (max-width: 750px) {
+  .filter {
+    display: flex;
+    flex-direction: column;
+  }
+  .filter label {
+    display: none;
+  }
+  .filter button {
+    margin: 10px auto;
   }
 }
