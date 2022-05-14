@@ -15,10 +15,9 @@ const Card = ({ pokemon }: CardProps) => {
   const history = useNavigate();
   return (
     <div className='card' onClick={() => history(`/${pokemon.id}`)}>
+      <div className='number'>{pokemon.id}</div>
       <img src={pokemon.sprites.front_default} alt='' />
-      <h2>
-        {pokemon.id}. {pokemon.name.toUpperCase()}
-      </h2>
+      <h2>{pokemon.name.toUpperCase()}</h2>
     </div>
   );
 };

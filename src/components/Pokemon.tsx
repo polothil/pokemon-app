@@ -4,7 +4,7 @@ import axios from 'axios';
 import { PokedexProp } from './Pokedex';
 import Loader from './Loader';
 
-const Pokemon = () => {
+const Pokemon: React.FC = () => {
   const history = useNavigate();
   const { pokemonId } = useParams();
   const [pokemon, setPokemon] = useState<PokedexProp | undefined>(undefined);
@@ -40,7 +40,7 @@ const Pokemon = () => {
               pokemon.abilities.map((item: any) => {
                 return (
                   <div className='group' key={item.ability.name}>
-                    <h2>{item.ability.name}</h2>
+                    <h2>{item.ability.name.toUpperCase()}</h2>
                   </div>
                 );
               })}
@@ -48,8 +48,8 @@ const Pokemon = () => {
           <div className='basic-stat'>
             {pokemon.stats &&
               pokemon.stats.map((item: any) => (
-                <h3 key={item.stat.name}>
-                  {item.stat.name} : {item.base_stat}
+                <h3 key={item.stat.name.toUpperCase()}>
+                  {item.stat.name.toUpperCase()} : {item.base_stat}
                 </h3>
               ))}
           </div>

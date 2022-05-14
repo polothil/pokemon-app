@@ -4,10 +4,10 @@ import axios from 'axios';
 import Card from './Card';
 import Loader from './Loader';
 
-// type Pokemons = {
-//   name: string;
-//   url: string;
-// };
+type Pokemons = {
+  name: string;
+  url: string;
+};
 
 export type PokedexProp = {
   id: number;
@@ -22,12 +22,14 @@ export type PokedexProp = {
   stats: [];
 };
 
-const Pokedex = () => {
+const Pokedex: React.FC = () => {
   const [pokemonData, setPokemonData] = useState<PokedexProp[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [url, setUrl] = useState('https://pokeapi.co/api/v2/pokemon/');
-  const [next, setNext] = useState('');
-  const [previous, setPrevious] = useState('');
+  const [loading, setLoading] = useState<boolean>(true);
+  const [url, setUrl] = useState<string>('https://pokeapi.co/api/v2/pokemon/');
+  const [next, setNext] = useState<string>('');
+  // const [previous, setPrevious] = useState('');
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [filteredList, setFilteredList] = useState<PokedexProp[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,7 +37,7 @@ const Pokedex = () => {
         setLoading(true);
         const res = await axios.get(url);
         setNext(res.data.next);
-        setPrevious(res.data.previous);
+        // setPrevious(res.data.previous);
         getPokemons(res.data.results);
       } catch (error) {
         console.log(error);
@@ -47,10 +49,8 @@ const Pokedex = () => {
   }, [url]);
 
   const getPokemons = async (res: any) => {
-    res.map(async (item: any) => {
-      // console.log(item.url);
+    res.map(async (item: Pokemons) => {
       const result = await axios.get(item.url);
-      // console.log(result.data);
       setPokemonData((state) => {
         state = [...state, result.data];
         state.sort((a, b) => (a.id > b.id ? 1 : -1));
@@ -60,20 +60,32 @@ const Pokedex = () => {
     setLoading(false);
   };
 
+  const handleFilter = (filter: string) => {
+    setSearchTerm(filter);
+    if (filter !== '') {
+      const newList: PokedexProp[] = pokemonData.filter((pokemon) => {
+        return pokemon.name.toLowerCase().includes(filter.toLowerCase());
+      });
+      setFilteredList(newList);
+    } else {
+      setFilteredList(pokemonData);
+    }
+  };
+
   return (
     <>
-      <Header />
+      <Header filter={handleFilter} />
       {loading ? (
         <Loader />
       ) : (
         <div className='container'>
-          {pokemonData.map((pokemon) => (
-            <Card key={pokemon.id} pokemon={pokemon} />
-          ))}
+          {searchTerm.length < 1
+            ? pokemonData.map((pokemon) => <Card key={pokemon.id} pokemon={pokemon} />)
+            : filteredList.map((pokemon) => <Card key={pokemon.id} pokemon={pokemon} />)}
         </div>
       )}
       <div className='btn-group'>
-        {previous && (
+        {/* {previous && (
           <button
             onClick={() => {
               setPokemonData([]);
@@ -82,15 +94,15 @@ const Pokedex = () => {
           >
             Previous
           </button>
-        )}
-        {next && (
+        )} */}
+        {next && searchTerm.length < 1 && (
           <button
             onClick={() => {
-              setPokemonData([]);
+              // setPokemonData([]);
               setUrl(next);
             }}
           >
-            Next
+            Load more
           </button>
         )}
       </div>
