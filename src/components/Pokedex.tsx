@@ -9,26 +9,23 @@ type Pokemons = {
   url: string;
 };
 
-export type PokedexProp = {
-  id: number;
+type pokeDexProp = {
   name: string;
+  id: number;
   sprites: {
     front_default: string;
   };
-  abilities?: {
-    ability: string;
-    name: string;
-  }[];
-  stats: [];
 };
 
 const Pokedex: React.FC = () => {
-  const [pokemonData, setPokemonData] = useState<PokedexProp[]>([]);
+  const [pokemonData, setPokemonData] = useState<pokeDexProp[]>(
+    JSON.parse(localStorage.getItem('pokeList')!) || []
+  );
   const [loading, setLoading] = useState<boolean>(true);
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [filteredList, setFilteredList] = useState<PokedexProp[]>([]);
-  const [offset, setOffset] = useState(0);
-  const [y, setY] = useState(window.scrollY);
+  const [filteredList, setFilteredList] = useState<pokeDexProp[]>([]);
+  const [offset, setOffset] = useState<number>(pokemonData.length);
+  const [y, setY] = useState<number>(window.scrollY);
 
   const handleNavigation = useCallback(
     (e: any) => {
@@ -59,19 +56,31 @@ const Pokedex: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      let pokeList = JSON.parse(localStorage.getItem('pokeList')!) || [];
       try {
         console.log('API calling....');
         const res = await axios.get(
           `https://pokeapi.co/api/v2/pokemon?limit=30&offset=${offset}`
         );
         res.data.results.forEach(async (result: Pokemons) => {
-          const detailedRes = await axios.get(result.url);
-          setPokemonData((state) => {
-            state = [...state, detailedRes.data];
-            state.sort((a, b) => (a.id > b.id ? 1 : -1));
+          try {
+            const detailedRes = await axios.get(result.url);
+            const pokeData = {
+              name: detailedRes.data.name,
+              id: detailedRes.data.id,
+              sprites: {
+                front_default: detailedRes.data.sprites.front_default,
+              },
+            };
+            pokeList = [...pokeList, pokeData];
+            pokeList.sort((a: pokeDexProp, b: pokeDexProp) => (a.id > b.id ? 1 : -1));
+            setPokemonData(pokeList);
             setLoading(false);
-            return state;
-          });
+            localStorage.setItem('pokeList', JSON.stringify(pokeList));
+          } catch (error) {
+            console.log(error);
+            alert('Error fetching data from server');
+          }
         });
       } catch (error) {
         console.log(error);
@@ -84,7 +93,7 @@ const Pokedex: React.FC = () => {
   const handleFilter = (filter: string) => {
     setSearchTerm(filter);
     if (filter !== '') {
-      const newList: PokedexProp[] = pokemonData.filter((pokemon) => {
+      const newList: pokeDexProp[] = pokemonData.filter((pokemon) => {
         return pokemon.name.toLowerCase().includes(filter.toLowerCase());
       });
       setFilteredList(newList);

@@ -1,13 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { PokedexProp } from './Pokedex';
 import Loader from './Loader';
+
+export type PokemonProp = {
+  id: number;
+  name: string;
+  sprites: {
+    front_default: string;
+  };
+  abilities?: {
+    ability: string;
+    name: string;
+  }[];
+  stats: [];
+};
 
 const Pokemon: React.FC = () => {
   const history = useNavigate();
   const { pokemonId } = useParams();
-  const [pokemon, setPokemon] = useState<PokedexProp | undefined>(undefined);
+  const [pokemon, setPokemon] = useState<PokemonProp | undefined>(undefined);
 
   useEffect(() => {
     const fetchData = async () => {
