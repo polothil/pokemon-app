@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Header from './Header';
 import axios from 'axios';
 import Card from './Card';
@@ -29,10 +29,13 @@ const Pokedex: React.FC = () => {
     JSON.parse(localStorage.getItem('pokeFav')!) || []
   );
   const [showFav, setShowFav] = useState<boolean>(false);
-  const [offset, setOffset] = useState<number>(pokemonData.length);
   const [y, setY] = useState<number>(window.scrollY);
 
-  const limit = 20;
+  // To prevent API call in case local data is available on initial page load
+  const isInitialMount = useRef(true);
+  const [offset, setOffset] = useState<number>(pokemonData.length);
+
+  let limit = 10;
 
   const handleNavigation = useCallback(
     (e: any) => {
@@ -44,7 +47,7 @@ const Pokedex: React.FC = () => {
             e.target.documentElement.scrollHeight &&
           !showFav
         ) {
-          // console.log('At the bottom');
+          console.log('At the bottom');
           setOffset((prev) => prev + limit);
         }
       }
@@ -65,6 +68,7 @@ const Pokedex: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       let pokeList = JSON.parse(localStorage.getItem('pokeList')!) || [];
+
       try {
         console.log('API calling....');
         const res = await axios.get(
@@ -96,7 +100,23 @@ const Pokedex: React.FC = () => {
         alert('Error fetching data from server');
       }
     };
-    fetchData();
+
+    // To prevent API call in case local data is available on initial page load
+    if (isInitialMount.current) {
+      console.log('Initial mount');
+      let pokeList = JSON.parse(localStorage.getItem('pokeList')!);
+      if (!pokeList) {
+        console.log('No local data');
+        fetchData();
+      } else {
+        setPokemonData(pokeList);
+        setLoading(false);
+      }
+      isInitialMount.current = false;
+    } else {
+      console.log('Not Initial mount');
+      fetchData();
+    }
   }, [offset]);
 
   const handleFilter = (filter: string) => {
@@ -130,21 +150,23 @@ const Pokedex: React.FC = () => {
       {loading ? (
         <Loader />
       ) : (
-        <div className='container'>
-          {/* Show favorites -> set ShowFav state -> render favorites  */}
-          {/* Else, if there is nothing on the search input, render all, else render filtered list */}
-          {showFav
-            ? favorites.map((pokemon) => (
-                <Card pokemon={pokemon} key={pokemon.id} favIcon={handleFavorites} />
-              ))
-            : searchTerm.length < 1
-            ? pokemonData.map((pokemon) => (
-                <Card key={pokemon.id} pokemon={pokemon} favIcon={handleFavorites} />
-              ))
-            : filteredList.map((pokemon, i) => (
-                <Card key={pokemon.id} pokemon={pokemon} favIcon={handleFavorites} />
-              ))}
-        </div>
+        pokemonData && (
+          <div className='container'>
+            {/* Show favorites -> set ShowFav state -> render favorites  */}
+            {/* Else, if there is nothing on the search input, render all, else render filtered list */}
+            {showFav
+              ? favorites.map((pokemon) => (
+                  <Card pokemon={pokemon} key={pokemon.id} favIcon={handleFavorites} />
+                ))
+              : searchTerm.length < 1
+              ? pokemonData.map((pokemon) => (
+                  <Card key={pokemon.id} pokemon={pokemon} favIcon={handleFavorites} />
+                ))
+              : filteredList.map((pokemon, i) => (
+                  <Card key={pokemon.id} pokemon={pokemon} favIcon={handleFavorites} />
+                ))}
+          </div>
+        )
       )}
       <div className='btn-group'></div>
     </>
