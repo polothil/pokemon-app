@@ -43,13 +43,13 @@ const Pokedex: React.FC = () => {
       if (y < window.scrollY) {
         // console.log('scrolling down');
         if (
-          e.target.documentElement.scrollTop + window.innerHeight >=
+          e.target.documentElement.scrollTop + window.innerHeight + 1 >=
             e.target.documentElement.scrollHeight &&
           !showFav
         ) {
           console.log('At the bottom');
           let pokeList = JSON.parse(localStorage.getItem('pokeList')!);
-          setOffset(pokeList.length);
+          if (pokeList?.length) setOffset(pokeList.length);
         }
       }
       setY(window.scrollY);
