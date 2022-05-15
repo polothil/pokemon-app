@@ -35,7 +35,7 @@ const Pokedex: React.FC = () => {
   const isInitialMount = useRef(true);
   const [offset, setOffset] = useState<number>(pokemonData.length);
 
-  let limit = 10;
+  const limit = 10;
 
   const handleNavigation = useCallback(
     (e: any) => {
