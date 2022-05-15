@@ -115,9 +115,9 @@ body {
   color: red;
 }
 
-/* Next & Previous burrons */
+/* Next, Previous & Back Buttons */
 
-/* .btn-group {
+.btn-group {
   width: 90%;
   margin: auto;
   padding-top: 10px;
@@ -136,7 +136,8 @@ body {
   background-color: #b74555;
   border-radius: 8px;
   cursor: pointer;
-} */
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.5);
+}
 
 /* Pokemon component */
 .content {
@@ -204,7 +205,7 @@ body {
   width: 0;
   height: 0;
   border: 50px solid transparent;
-  border-bottom-color: white;
+  border-bottom-color: #50add4;
   animation: rotateA 2s linear infinite 0.5s;
 }
 
