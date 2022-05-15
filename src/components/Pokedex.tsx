@@ -33,9 +33,9 @@ const Pokedex: React.FC = () => {
 
   // To prevent API call in case local data is available on initial page load
   const isInitialMount = useRef(true);
-  const [offset, setOffset] = useState<number>(pokemonData.length);
+  const [offset, setOffset] = useState<number>(0);
 
-  const limit = 10;
+  const limit = 20;
 
   const handleNavigation = useCallback(
     (e: any) => {
@@ -48,7 +48,8 @@ const Pokedex: React.FC = () => {
           !showFav
         ) {
           console.log('At the bottom');
-          setOffset((prev) => prev + limit);
+          let pokeList = JSON.parse(localStorage.getItem('pokeList')!);
+          setOffset(pokeList.length);
         }
       }
       setY(window.scrollY);
@@ -109,6 +110,7 @@ const Pokedex: React.FC = () => {
         console.log('No local data');
         fetchData();
       } else {
+        console.log('Found local data, skipping API call');
         setPokemonData(pokeList);
         setLoading(false);
       }
