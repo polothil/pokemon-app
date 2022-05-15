@@ -23,6 +23,7 @@ const Pokedex: React.FC = () => {
     JSON.parse(localStorage.getItem('pokeList')!) || []
   );
   const [loading, setLoading] = useState<boolean>(true);
+  const [scrollerLoader, setscrollerLoader] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [filteredList, setFilteredList] = useState<pokeDexProp[]>([]);
   const [favorites, setfavorites] = useState<pokeDexProp[]>(
@@ -48,6 +49,7 @@ const Pokedex: React.FC = () => {
           !showFav
         ) {
           console.log('At the bottom');
+          setscrollerLoader(true);
           let pokeList = JSON.parse(localStorage.getItem('pokeList')!);
           if (pokeList?.length) setOffset(pokeList.length);
         }
@@ -95,6 +97,7 @@ const Pokedex: React.FC = () => {
             console.log(error);
             alert('Error fetching data from server');
           }
+          setscrollerLoader(false);
         });
       } catch (error) {
         console.log(error);
@@ -170,7 +173,13 @@ const Pokedex: React.FC = () => {
           </div>
         )
       )}
-      <div className='btn-group'></div>
+      {scrollerLoader && (
+        <div className='scroll-loader'>
+          <div className='circle'></div>
+          <div className='circle'></div>
+          <div className='circle'></div>
+        </div>
+      )}
     </>
   );
 };
