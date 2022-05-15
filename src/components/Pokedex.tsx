@@ -25,10 +25,14 @@ const Pokedex: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [filteredList, setFilteredList] = useState<pokeDexProp[]>([]);
-  const [favorites, setfavorites] = useState<pokeDexProp[]>([]);
+  const [favorites, setfavorites] = useState<pokeDexProp[]>(
+    JSON.parse(localStorage.getItem('pokeFav')!) || []
+  );
   const [showFav, setShowFav] = useState<boolean>(false);
   const [offset, setOffset] = useState<number>(pokemonData.length);
   const [y, setY] = useState<number>(window.scrollY);
+
+  const limit = 20;
 
   const handleNavigation = useCallback(
     (e: any) => {
@@ -40,8 +44,8 @@ const Pokedex: React.FC = () => {
             e.target.documentElement.scrollHeight &&
           !showFav
         ) {
-          console.log('At the bottom');
-          setOffset((prev) => prev + 30);
+          // console.log('At the bottom');
+          setOffset((prev) => prev + limit);
         }
       }
       setY(window.scrollY);
@@ -64,7 +68,7 @@ const Pokedex: React.FC = () => {
       try {
         console.log('API calling....');
         const res = await axios.get(
-          `https://pokeapi.co/api/v2/pokemon?limit=30&offset=${offset}`
+          `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`
         );
         res.data.results.forEach(async (result: Pokemons) => {
           try {
@@ -107,10 +111,12 @@ const Pokedex: React.FC = () => {
     }
   };
 
-  const toggleFav = (id: number) => {
+  const handleFavorites = (id: number) => {
     const result = pokemonData.filter((pokemon) => pokemon.id === id);
     result[0].fav = !result[0].fav;
+    localStorage.setItem('pokeList', JSON.stringify(pokemonData));
     const favList = pokemonData.filter((pokemon) => pokemon.fav === true);
+    localStorage.setItem('pokeFav', JSON.stringify(favList));
     setfavorites(favList);
   };
 
@@ -125,24 +131,19 @@ const Pokedex: React.FC = () => {
         <Loader />
       ) : (
         <div className='container'>
+          {/* Show favorites -> set ShowFav state -> render favorites  */}
+          {/* Else, if there is nothing on the search input, render all, else render filtered list */}
           {showFav
             ? favorites.map((pokemon) => (
-                <Card pokemon={pokemon} favIcon={toggleFav} key={pokemon.id} />
+                <Card pokemon={pokemon} key={pokemon.id} favIcon={handleFavorites} />
               ))
             : searchTerm.length < 1
             ? pokemonData.map((pokemon) => (
-                <Card key={pokemon.id} pokemon={pokemon} favIcon={toggleFav} />
+                <Card key={pokemon.id} pokemon={pokemon} favIcon={handleFavorites} />
               ))
             : filteredList.map((pokemon, i) => (
-                <Card key={pokemon.id} pokemon={pokemon} favIcon={toggleFav} />
+                <Card key={pokemon.id} pokemon={pokemon} favIcon={handleFavorites} />
               ))}
-          {/* {searchTerm.length < 1
-            ? pokemonData.map((pokemon) => (
-                <Card key={pokemon.id} pokemon={pokemon} favIcon={toggleFav} />
-              ))
-            : filteredList.map((pokemon, i) => (
-                <Card key={pokemon.id} pokemon={pokemon} favIcon={toggleFav} />
-              ))} */}
         </div>
       )}
       <div className='btn-group'></div>
