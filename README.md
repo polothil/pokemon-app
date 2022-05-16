@@ -1,6 +1,6 @@
 # Instructions to run the app
 
-1. Download the zip file
+1. Download the zip file/clone the project
 2. Open the project folder in a code editor
 3. Open the terminal/git-bash (go to the project folder) and run the command "npm i". This will install all dependencies.
 4. Once all dependencies are installed, run "npm start" to start the app.
