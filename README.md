@@ -9,14 +9,14 @@
 
 1. Responsive
 2. Feedback on API failure and network slowness
-3. App consistes of two main components - Pokedex component displaying pokemon cards and Pokemon component displaying details of a particular pokemon
+3. App consists of two main components - Pokedex component displaying pokemon cards and Pokemon component displaying details of a particular pokemon
 4. Possible to send direct link to view details of the pokemon
 5. No CSS libraries/frameworks used
 6. Used REST version of the API
 7. Implemented endless scroll
 8. Implemented search pokemon by name
 9. Data persistence implemented. API will not be called on page mounting if data is available on local storage. If user scrolls down to the bottom, API will be called to append the list
-10. Favorite pokemons list can be created.
+10. Favorite pokemons list can be created and viewed.
 
 # Getting Started with Create React App
 
