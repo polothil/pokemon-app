@@ -36,6 +36,7 @@ const Pokedex: React.FC = () => {
   const isInitialMount = useRef(true);
   const [offset, setOffset] = useState<number>(0);
 
+  // Number of pokemons to be fetched per API call
   const limit = 20;
 
   const handleNavigation = useCallback(

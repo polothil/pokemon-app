@@ -19,7 +19,7 @@ export type PokemonProp = {
 const Pokemon: React.FC = () => {
   const history = useNavigate();
   const { pokemonId } = useParams();
-  const [pokemon, setPokemon] = useState<PokemonProp | undefined>(undefined);
+  const [pokemon, setPokemon] = useState<PokemonProp | undefined | null>(undefined);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,7 +28,8 @@ const Pokemon: React.FC = () => {
         setPokemon(res.data);
       } catch (error) {
         console.log(error);
-        alert('Error fetching data from server');
+        // alert('Error fetching data from server');
+        setPokemon(null);
       }
     };
     fetchData();
