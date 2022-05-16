@@ -1,3 +1,23 @@
+# Instructions to run the app
+
+1. Download the zip file
+2. Open the project folder in a code editor
+3. Open the terminal/git-bash (go to the project folder) and run the command "npm i". This will install all dependencies.
+4. Once all dependencies are installed, run "npm start" to start the app.
+
+# Feature Details
+
+1. Responsive
+2. Feedback on API failure and network slowness
+3. App consistes of two main components - Pokedex component displaying pokemon cards and Pokemon component displaying details of a particular pokemon
+4. Possible to send direct link to view details of the pokemon
+5. No CSS libraries/frameworks used
+6. Used REST version of the API
+7. Implemented endless scroll
+8. Implemented search pokemon by name
+9. Data persistence implemented. API will not be called on page mounting if data is available on local storage. If user scrolls down to the bottom, API will be called to append the list
+10. Favorite pokemons list can be created.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
