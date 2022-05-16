@@ -125,6 +125,7 @@ const Pokedex: React.FC = () => {
     }
   }, [offset]);
 
+  // Filter list of pokemons based on search string
   const handleFilter = (filter: string) => {
     setSearchTerm(filter);
     if (filter !== '') {
@@ -137,12 +138,14 @@ const Pokedex: React.FC = () => {
     }
   };
 
+  // Marking favorites and adding to favorites list
   const handleFavorites = (id: number) => {
     const result = pokemonData.filter((pokemon) => pokemon.id === id);
     result[0].fav = !result[0].fav;
     localStorage.setItem('pokeList', JSON.stringify(pokemonData));
     const favList = pokemonData.filter((pokemon) => pokemon.fav === true);
     localStorage.setItem('pokeFav', JSON.stringify(favList));
+    setPokemonData(pokemonData);
     setfavorites(favList);
   };
 
@@ -158,7 +161,7 @@ const Pokedex: React.FC = () => {
       ) : (
         pokemonData && (
           <div className='container'>
-            {/* Show favorites -> set ShowFav state -> render favorites  */}
+            {/* Show favorites button clicked -> set ShowFav state -> render favorites  */}
             {/* Else, if there is nothing on the search input, render all, else render filtered list */}
             {showFav
               ? favorites.map((pokemon) => (
